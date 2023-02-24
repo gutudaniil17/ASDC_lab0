@@ -22,8 +22,41 @@ public class Competitor implements Comparable {
     public Competitor() {
     }
 
-    ///Constructor with args
-    public Competitor(String name, String surname, String country, int dateOfBirthday, Category category, int numberInTable) {
+    ///Fabric method
+    ///Instead of copying constructor
+    public static Competitor createCompetitorFromObject(Object obj){
+        Competitor competitor = new Competitor();
+        Competitor competitor1 = (Competitor) obj;
+        String name = competitor1.name;
+        String surname = competitor1.surname;
+        String country = competitor1.country;
+        int yearOfBirthday = competitor1.yearOfBirthday;
+        int numberInTable = competitor1.numberInTable;
+        Category category = competitor1.category;
+        competitor = new Competitor();
+        competitor.setAllParam(name,surname,country,yearOfBirthday,category,numberInTable);
+
+        return competitor;
+    }
+    ///Fabric method
+    ///Instead of constructor with parameter String
+    public static Competitor createCompetitorFromString(Object obj){
+        Competitor competitor;
+        String csvLine = (String) obj;
+        String[] arrParam = csvLine.split(";");
+        String name = arrParam[0];
+        String surname = arrParam[1];
+        String country = arrParam[2];
+        int yearOfBirthday = Integer.parseInt(arrParam[3]);
+        int numberInTable = Integer.parseInt(arrParam[4]);
+        Category category = Category.valueOf(arrParam[5]);
+        competitor = new Competitor();
+        competitor.setAllParam(name,surname,country,yearOfBirthday,category,numberInTable);
+        return competitor;
+    }
+
+    ///Sets all parameters, instead of constructor with args
+    public void setAllParam(String name, String surname, String country, int dateOfBirthday, Category category, int numberInTable){
         this.name = name;
         this.surname = surname;
         this.country = country;
@@ -32,12 +65,14 @@ public class Competitor implements Comparable {
         this.numberInTable = numberInTable;
     }
 
+
+    ///Method that is used for sorting of competitor's list
     public int getNumberInTable() {
         return numberInTable;
     }
 
     ///Constructor from string
-    public Competitor(String csvLine) {
+/*    public Competitor(String csvLine) {
         String[] arrParam = csvLine.split(";");
         name = arrParam[0];
         surname = arrParam[1];
@@ -45,7 +80,7 @@ public class Competitor implements Comparable {
         yearOfBirthday = Integer.parseInt(arrParam[3]);
         numberInTable = Integer.parseInt(arrParam[4]);
         category = Category.valueOf(arrParam[5]);
-    }
+    }*/
 
     ///Constructor copy
     public Competitor(Competitor comp) {
@@ -58,8 +93,9 @@ public class Competitor implements Comparable {
     }
 
     ///Copying method
+    ///Using fabric method
     public Competitor copy() {
-        return new Competitor(this);
+        return createCompetitorFromObject(this);
     }
 
     ///Equals method
@@ -78,6 +114,7 @@ public class Competitor implements Comparable {
 
     ///Input method
     ///Reads data from file
+    ///Using fabric method
     public static ArrayList<Competitor> input(File resource) {
         ArrayList<Competitor> competitorList = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(resource))) {
@@ -85,7 +122,7 @@ public class Competitor implements Comparable {
             while ((st = br.readLine()) != null) {
                 if (st.isEmpty()) {
                 } else {
-                    competitorList.add(new Competitor(st));
+                    competitorList.add(createCompetitorFromString(st));
                 }
             }
         } catch (IOException e) {
@@ -96,11 +133,12 @@ public class Competitor implements Comparable {
 
     ///Input overloaded method
     ///Reads data from the string
+    ///Using fabric method
     public static ArrayList<Competitor> input(String resource) {
         ArrayList<Competitor> competitorList = new ArrayList<>();
         String[] array = resource.split("/n");
         for (String str : array) {
-            competitorList.add(new Competitor(str));
+            competitorList.add(createCompetitorFromString(str));
         }
         return competitorList;
     }
