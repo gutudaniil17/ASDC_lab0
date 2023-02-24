@@ -58,14 +58,8 @@ public class Competitor implements Comparable {
     }
 
     ///Copying method
-    public static Competitor copy(Competitor comp) {
-        String name = comp.name;
-        String surname = comp.surname;
-        String country = comp.country;
-        Category category = comp.category;
-        int yearOfBirthday = comp.yearOfBirthday;
-        int numberInTable = comp.numberInTable;
-        return new Competitor(name, surname, country, yearOfBirthday, category, numberInTable);
+    public Competitor copy() {
+        return new Competitor(this);
     }
 
     ///Equals method
